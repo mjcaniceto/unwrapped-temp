@@ -112,7 +112,11 @@ export default function Create() {
       }
       let finalSurprise = surprise;
       if (Object.keys(patch).length > 0) {
-        finalSurprise = await updateSurprise(surprise.id, patch);
+        const updatedPatch = await updateSurprise(surprise.id, patch);
+        finalSurprise = {
+          ...surprise,
+          ...updatedPatch,
+        };
       }
 
       setResult(finalSurprise);
