@@ -70,10 +70,16 @@ export async function createSurprise(payload: CreateSurprisePayload) {
 // Dashboard mutations (RLS-scoped to the authenticated surprise session)
 // ---------------------------------------------------------------------------
 
-export async function updateSurprise(id: string, patch: Partial<PublicSurprise>) {
-  const { data, error } = await supabase.from('surprises').update(patch).eq('id', id).select().single();
+// Note: this deliberately does NOT chain `.select()`. The `surprises` table
+// has no SELECT grant for anon at all (every read goes through the RPCs in
+// this file, so creator_email/creator_password_hash can never leak) — asking
+// PostgREST to return the updated row would require a SELECT grant we don't
+// want to add. RLS still authorizes the UPDATE itself via
+// `current_session_surprise_id()`; we just merge the patch in locally.
+export async function updateSurprise(id: string, patch: Partial<PublicSurprise>): Promise<Partial<PublicSurprise>> {
+  const { error } = await supabase.from('surprises').update(patch).eq('id', id);
   if (error) throw error;
-  return data as PublicSurprise;
+  return patch;
 }
 
 export async function setSurpriseStatus(id: string, status: 'draft' | 'published') {
