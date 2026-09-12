@@ -95,7 +95,7 @@ returns uuid
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select ds.surprise_id
   from dashboard_sessions ds
@@ -114,7 +114,7 @@ returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select exists (select 1 from surprises where id = p_id and status = 'published');
 $$;
@@ -126,7 +126,7 @@ returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select exists (select 1 from surprises where id = p_id);
 $$;
@@ -164,7 +164,7 @@ returns text
 language plpgsql
 volatile
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   candidate text;
@@ -182,7 +182,7 @@ returns text
 language plpgsql
 volatile
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   base text := slugify(p_base);
@@ -201,7 +201,7 @@ returns text
 language plpgsql
 volatile
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   candidate text;
@@ -283,7 +283,7 @@ create or replace function create_surprise(
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row surprises;
@@ -339,7 +339,7 @@ create or replace function verify_dashboard_password(p_surprise_code text, p_pas
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row surprises;
@@ -371,7 +371,7 @@ create or replace function revoke_dashboard_session(p_session_token uuid)
 returns void
 language sql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   delete from dashboard_sessions where session_token = p_session_token;
 $$;
@@ -389,7 +389,7 @@ returns jsonb
 language plpgsql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row surprises;
@@ -414,7 +414,7 @@ returns jsonb
 language plpgsql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row surprises;
@@ -439,7 +439,7 @@ returns jsonb
 language plpgsql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_row surprises;
@@ -471,7 +471,7 @@ create or replace function submit_quiz_contribution(
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_surprise surprises;
